@@ -17,7 +17,7 @@ jobs:
         id: pull
         uses: tretuna/sync-branches@1.4.0
         with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.SYNC_BRANCHES_TOKEN}}
           FROM_BRANCH: "amd-staging"
           TO_BRANCH: "amd-mainline"
         
