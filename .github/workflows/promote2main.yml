@@ -3,7 +3,8 @@ on:
     workflow_dispatch:
     schedule:
       - cron: 0 5 * * 0
-    pull-request: amd-staging
+    pull_request:
+        branches: amd-staging
 
 jobs:
   sync-branches:
