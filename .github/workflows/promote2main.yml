@@ -1,0 +1,26 @@
+name: Sync Mainline with Staging
+on:
+    workflow_dispatch:
+    schedule:
+      - cron: 0 5 * * 0
+    pull_request:
+        branches: amd-staging
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.SYNC_BRANCHES_TOKEN}}
+          FROM_BRANCH: 'amd-staging'
+          TO_BRANCH: 'amd-mainline'
