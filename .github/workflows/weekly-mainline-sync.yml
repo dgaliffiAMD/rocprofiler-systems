@@ -5,7 +5,8 @@ on:
       - cron: 0 5 * * sun
 
 jobs:
-  sync-branches:
+  promote-stg-to-main:
+    if: github.repository == 'dgaliffiAMD/rocprofiler-systems'
     runs-on: ubuntu-latest
     name: Promote Staging to Mainline
     steps:
