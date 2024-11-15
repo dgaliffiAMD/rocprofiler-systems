@@ -1,5 +1,7 @@
 name: Sync Mainline with Staging
 on:
+    push:
+        branches: amd-staging
     workflow_dispatch:
     schedule:
       - cron: 0 5 * * sun
