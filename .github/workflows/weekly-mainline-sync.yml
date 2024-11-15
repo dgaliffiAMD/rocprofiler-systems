@@ -28,4 +28,4 @@ jobs:
           git checkout -b promote-staging-$(date +%F)
           git merge --ff-only origin/amd-staging
           git push -u origin HEAD
-          gh pr create --base amd-mainline --title "Promote \`amd-staging\` to \`amd-mainline\`" --fill
+          gh pr create --base amd-mainline --title "Promote \`amd-staging\` to \`amd-mainline\`" --fill --label "automerge"
