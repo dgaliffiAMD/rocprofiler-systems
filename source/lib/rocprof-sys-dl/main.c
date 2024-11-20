@@ -77,7 +77,15 @@ rocprofsys_init(const char*, bool, const char*);
 extern char*
 basename(const char*);
 
-extern void rocprofsys_set_main(main_func_t) ROCPROFSYS_INTERNAL_API;
+extern void
+rocprofsys_set_main_init(main_func_t func) ROCPROFSYS_INTERNAL_API;
+
+extern void
+rocprofsys_set_main(main_func_t func) ROCPROFSYS_INTERNAL_API;
+
+extern int
+rocprofsys_main_init(int argc, char** argv, char** envp) ROCPROFSYS_INTERNAL_API;
+
 
 extern int
 rocprofsys_main(int argc, char** argv, char** envp) ROCPROFSYS_INTERNAL_API;
@@ -99,6 +107,7 @@ rocprofsys_libc_start_main(int (*_main)(int, char**, char**), int _argc, char** 
 
     // Save the real main function address
     rocprofsys_set_main(_main);
+    rocprofsys_set_main_init(_init);
 
     // Find the real __libc_start_main()
     start_main_t user_main = dlsym(RTLD_NEXT, "__libc_start_main");
@@ -116,8 +125,8 @@ rocprofsys_libc_start_main(int (*_main)(int, char**, char**), int _argc, char** 
         else
         {
             // call rocprof-sys main function wrapper
-            return user_main(rocprofsys_main, _argc, _argv, _init, _fini, _rtld_fini,
-                             _stack_end);
+            return user_main(rocprofsys_main, _argc, _argv, rocprofsys_main_init, _fini,
+                             _rtld_fini, _stack_end);
         }
     }
     else

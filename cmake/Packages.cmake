@@ -124,13 +124,11 @@ endforeach()
 
 # ----------------------------------------------------------------------------------------#
 #
-# hip version
+# ROCm Version
 #
 # ----------------------------------------------------------------------------------------#
 
-if(ROCPROFSYS_USE_ROCM
-   OR ROCPROFSYS_USE_ROCTRACER
-   OR ROCPROFSYS_USE_ROCPROFILER)
+if(ROCPROFSYS_USE_ROCM)
     find_package(ROCmVersion)
 
     if(NOT ROCmVersion_FOUND)
@@ -165,11 +163,6 @@ if(ROCPROFSYS_USE_ROCM
     set(ROCPROFSYS_ROCM_VERSION_PATCH ${ROCmVersion_PATCH_VERSION})
     set(ROCPROFSYS_ROCM_VERSION ${ROCmVersion_TRIPLE_VERSION})
 
-    if(ROCPROFSYS_ROCM_VERSION_MAJOR GREATER_EQUAL 4 AND ROCPROFSYS_ROCM_VERSION_MINOR
-                                                        GREATER 3)
-        set(roctracer_kfdwrapper_LIBRARY)
-    endif()
-
     if(NOT roctracer_kfdwrapper_LIBRARY)
         set(roctracer_kfdwrapper_LIBRARY)
     endif()
@@ -185,7 +178,7 @@ endif()
 
 # ----------------------------------------------------------------------------------------#
 #
-# HIP
+# ROCm (rocprofiler-sdk, rocm-smi)
 #
 # ----------------------------------------------------------------------------------------#
 
@@ -194,6 +187,9 @@ if(ROCPROFSYS_USE_ROCM)
     rocprofiler_systems_target_compile_definitions(rocprofiler-systems-rocm
                                                    INTERFACE ROCPROFSYS_USE_ROCM)
     target_link_libraries(rocprofiler-systems-rocm INTERFACE hip::host)
+
+    find_package(rocprofiler-sdk ${rocprofiler_systems_FIND_QUIETLY} REQUIRED)
+    target_link_libraries(rocprofiler-systems-rocm INTERFACE rocprofiler-sdk::rocprofiler-sdk)
 
     find_package(rocm-smi ${rocprofiler_systems_FIND_QUIETLY} REQUIRED)
     target_link_libraries(rocprofiler-systems-rocm INTERFACE rocm-smi::rocm-smi)

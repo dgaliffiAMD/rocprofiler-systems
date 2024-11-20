@@ -268,8 +268,6 @@ The following snippets show how ``rocprof-sys-sample`` runs with various environ
 
       $ rocprof-sys-sample -- ./parallel-overhead-locks 30 4 100
 
-      HSA_TOOLS_LIB=/opt/rocprofiler-systems/lib/librocprof-sys-dl.so.1.7.1
-      HSA_TOOLS_REPORT_LOAD_FAILURE=1
       LD_PRELOAD=/opt/rocprofiler-systems/lib/librocprof-sys-dl.so.1.7.1
       ROCPROFSYS_USE_PROCESS_SAMPLING=false
       ROCPROFSYS_USE_SAMPLING=true
@@ -283,8 +281,6 @@ The following snippets show how ``rocprof-sys-sample`` runs with various environ
 
       $ rocprof-sys-sample -PTDH -I all -- ./parallel-overhead-locks 30 4 100
 
-      HSA_TOOLS_LIB=/opt/rocprofiler-systems/lib/librocprof-sys-dl.so.1.7.1
-      HSA_TOOLS_REPORT_LOAD_FAILURE=1
       KOKKOS_PROFILE_LIBRARY=/opt/rocprofiler-systems/lib/librocprof-sys.so.1.7.1
       LD_PRELOAD=/opt/rocprofiler-systems/lib/librocprof-sys-dl.so.1.7.1
       ROCPROFSYS_CPU_FREQ_ENABLED=true
@@ -298,8 +294,7 @@ The following snippets show how ``rocprof-sys-sample`` runs with various environ
       ROCPROFSYS_USE_PROCESS_SAMPLING=true
       ROCPROFSYS_USE_RCCLP=true
       ROCPROFSYS_USE_ROCM_SMI=true
-      ROCPROFSYS_USE_ROCPROFILER=true
-      ROCPROFSYS_USE_ROCTRACER=true
+      ROCPROFSYS_USE_ROCM=true
       ROCPROFSYS_USE_ROCTX=true
       ROCPROFSYS_USE_SAMPLING=true
       ROCPROFSYS_PROFILE=true
@@ -330,8 +325,7 @@ The following snippets show how ``rocprof-sys-sample`` runs with various environ
       ROCPROFSYS_USE_PROCESS_SAMPLING=true
       ROCPROFSYS_USE_RCCLP=false
       ROCPROFSYS_USE_ROCM_SMI=false
-      ROCPROFSYS_USE_ROCPROFILER=false
-      ROCPROFSYS_USE_ROCTRACER=false
+      ROCPROFSYS_USE_ROCM=false
       ROCPROFSYS_USE_ROCTX=false
       ROCPROFSYS_USE_SAMPLING=true
       ROCPROFSYS_PROFILE=true
@@ -363,8 +357,7 @@ Here is the full output from the previous
    ROCPROFSYS_USE_PROCESS_SAMPLING=true
    ROCPROFSYS_USE_RCCLP=false
    ROCPROFSYS_USE_ROCM_SMI=false
-   ROCPROFSYS_USE_ROCPROFILER=false
-   ROCPROFSYS_USE_ROCTRACER=false
+   ROCPROFSYS_USE_ROCM=false
    ROCPROFSYS_USE_ROCTX=false
    ROCPROFSYS_USE_SAMPLING=true
    [rocprof-sys][dl][1785877] rocprofsys_main

@@ -101,17 +101,18 @@ get_exe_realpath();
 
 template <typename Tp>
 bool
-set_setting_value(const std::string& _name, Tp&& _v)
+set_setting_value(const std::string& _name, Tp&& _v,
+                  settings::update_type _upd = settings::update_type::user)
 {
-    auto _user_upd = tim::settings::update_type::user;
-    auto _instance = tim::settings::shared_instance();
-    auto _setting  = _instance->find(_name);
+    auto* _instance = tim::settings::instance();
+    if(!_instance) return false;
+    auto _setting = _instance->find(_name);
     if(_setting == _instance->end()) return false;
     if(!_setting->second) return false;
     auto& itr      = _setting->second;
-    auto  _upd     = itr->set_user_updated();
-    auto  _success = itr->set(std::forward<Tp>(_v), _user_upd);
-    if(!_success) itr->set_updated(_upd);
+    auto  _old_upd = itr->get_updated_type();
+    auto  _success = itr->set(std::forward<Tp>(_v), _upd);
+    if(!_success) itr->set_updated(_old_upd);
     return _success;
 }
 
@@ -119,8 +120,9 @@ template <typename Tp>
 bool
 set_default_setting_value(const std::string& _name, Tp&& _v)
 {
-    auto _instance = tim::settings::shared_instance();
-    auto _setting  = _instance->find(_name);
+    auto* _instance = tim::settings::instance();
+    if(!_instance) return false;
+    auto _setting = _instance->find(_name);
     if(_setting == _instance->end()) return false;
     if(!_setting->second) return false;
     if(_setting->second->get_config_updated() || _setting->second->get_environ_updated())
@@ -132,8 +134,8 @@ template <typename Tp>
 std::optional<Tp>
 get_setting_value(const std::string& _name)
 {
-    auto _instance = tim::settings::shared_instance();
-    if(!_instance) return std::optional<Tp>{};
+    auto* _instance = tim::settings::instance();
+    if(!_instance) return std::nullopt;
     auto _setting = _instance->find(_name);
     if(_setting == _instance->end() || !_setting->second) return std::optional<Tp>{};
     auto&& _ret = _setting->second->get<Tp>();
@@ -195,16 +197,7 @@ bool&
 get_use_causal() ROCPROFSYS_HOT;
 
 bool
-get_use_roctracer() ROCPROFSYS_HOT;
-
-bool
-get_use_rocprofiler() ROCPROFSYS_HOT;
-
-bool
 get_use_rocm_smi() ROCPROFSYS_HOT;
-
-bool
-get_use_roctx();
 
 bool&
 get_use_sampling() ROCPROFSYS_HOT;
@@ -235,18 +228,6 @@ get_sampling_keep_internal();
 
 bool
 get_use_rcclp();
-
-bool
-get_trace_hip_api();
-
-bool
-get_trace_hip_activity();
-
-bool
-get_trace_hsa_api();
-
-bool
-get_trace_hsa_activity();
 
 size_t
 get_perfetto_shmem_size_hint();
@@ -281,9 +262,6 @@ get_perfetto_backend();
 // make this visible so rocprof-sys-avail can call it
 std::string
 get_perfetto_output_filename();
-
-bool
-get_perfetto_roctracer_per_stream() ROCPROFSYS_HOT;
 
 double
 get_trace_delay();
@@ -359,9 +337,6 @@ get_trace_thread_barriers();
 
 bool
 get_trace_thread_join();
-
-std::string
-get_rocm_events();
 
 bool
 get_use_tmp_files();

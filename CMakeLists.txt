@@ -179,15 +179,10 @@ rocprofiler_systems_add_option(ROCPROFSYS_USE_MPI "Enable MPI support" OFF)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_ROCM "Enable ROCm support" ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_PAPI "Enable HW counter support via PAPI"
                                ON)
-rocprofiler_systems_add_option(ROCPROFSYS_USE_ROCTRACER "Enable roctracer support"
-                               ${ROCPROFSYS_USE_ROCM})
-rocprofiler_systems_add_option(ROCPROFSYS_USE_ROCPROFILER "Enable rocprofiler support"
-                               ${ROCPROFSYS_USE_ROCM})
 rocprofiler_systems_add_option(ROCPROFSYS_USE_RCCL "Enable RCCL support"
                                ${ROCPROFSYS_USE_ROCM})
-rocprofiler_systems_add_option(
-    ROCPROFSYS_USE_MPI_HEADERS
-    "Enable wrapping MPI functions w/o enabling MPI dependency" ON)
+rocprofiler_systems_add_option(ROCPROFSYS_USE_MPI_HEADERS
+                               "Enable wrapping MPI functions w/o enabling MPI dependency" ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_OMPT "Enable OpenMP tools support" ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_PYTHON "Enable Python support" OFF)
 rocprofiler_systems_add_option(ROCPROFSYS_BUILD_DYNINST "Build dyninst from submodule"
@@ -215,25 +210,9 @@ elseif("$ENV{ROCPROFSYS_CI}")
 endif()
 
 if(NOT ROCPROFSYS_USE_ROCM)
-    set(ROCPROFSYS_USE_ROCTRACER
-        OFF
-        CACHE BOOL "Disabled via ROCPROFSYS_USE_ROCM=OFF" FORCE)
-    set(ROCPROFSYS_USE_ROCPROFILER
-        OFF
-        CACHE BOOL "Disabled via ROCPROFSYS_USE_ROCM=OFF" FORCE)
     set(ROCPROFSYS_USE_RCCL
         OFF
         CACHE BOOL "Disabled via ROCPROFSYS_USE_ROCM=OFF" FORCE)
-elseif(
-    ROCPROFSYS_USE_ROCM
-    AND NOT ROCPROFSYS_USE_ROCTRACER
-    AND NOT ROCPROFSYS_USE_ROCPROFILER
-    AND NOT ROCPROFSYS_USE_RCCL)
-    rocprofiler_systems_message(
-        AUTHOR_WARNING
-        "Setting ROCPROFSYS_USE_ROCM=OFF because roctracer, rocprofiler, and rccl options are disabled"
-        )
-    set(ROCPROFSYS_USE_ROCM OFF)
 endif()
 
 if(ROCPROFSYS_BUILD_TESTING)

@@ -1,6 +1,6 @@
 // MIT License
 //
-// Copyright (c) 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+// Copyright (c) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,40 +20,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "library/rocm.hpp"
-#include "core/config.hpp"
-#include "core/debug.hpp"
-#include "core/dynamic_library.hpp"
-#include "core/gpu.hpp"
-#include "library/rocm_smi.hpp"
-#include "library/rocprofiler-sdk.hpp"
-#include "library/runtime.hpp"
-#include "library/thread_data.hpp"
-#include "library/tracing.hpp"
+#pragma once
 
-#include <timemory/backends/cpu.hpp>
-#include <timemory/backends/threading.hpp>
-#include <timemory/utility/types.hpp>
+#include "core/timemory.hpp"
 
-#include <atomic>
-#include <chrono>
-#include <cstdint>
-#include <cstdlib>
-#include <mutex>
-#include <tuple>
-
-#if defined(ROCPROFSYS_USE_ROCM) && ROCPROFSYS_USE_ROCM > 0
+#if defined(ROCPROFSYS_USE_ROCM)
+#    include <rocprofiler-sdk/fwd.h>
 #    include <rocprofiler-sdk/rocprofiler.h>
 #endif
 
+#include <cstdint>
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
+
 namespace rocprofsys
 {
-namespace rocm
+namespace rocprofiler_sdk
 {
-std::vector<hardware_counter_info>
-rocm_events()
-{
-    return rocprofiler_sdk::get_rocm_events_info();
-}
-} // namespace rocm
-} // namespace rocprofsys
+void
+config_settings(const std::shared_ptr<settings>&);
+
+#if defined(ROCPROFSYS_USE_ROCM)
+
+std::unordered_set<rocprofiler_callback_tracing_kind_t>
+get_callback_domains();
+
+std::unordered_set<rocprofiler_buffer_tracing_kind_t>
+get_buffered_domains();
+
+std::vector<uint32_t>
+get_operations(rocprofiler_callback_tracing_kind_t kindv);
+
+std::vector<uint32_t>
+get_operations(rocprofiler_buffer_tracing_kind_t kindv);
+
+std::vector<std::string>
+get_rocm_events();
+
+std::unordered_set<uint32_t>
+get_backtrace_operations(rocprofiler_callback_tracing_kind_t kindv);
+
+std::unordered_set<uint32_t>
+get_backtrace_operations(rocprofiler_buffer_tracing_kind_t kindv);
+
+#endif
+}  // namespace rocprofiler_sdk
+}  // namespace rocprofsys
