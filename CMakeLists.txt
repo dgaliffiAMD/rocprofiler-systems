@@ -181,8 +181,9 @@ rocprofiler_systems_add_option(ROCPROFSYS_USE_PAPI "Enable HW counter support vi
                                ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_RCCL "Enable RCCL support"
                                ${ROCPROFSYS_USE_ROCM})
-rocprofiler_systems_add_option(ROCPROFSYS_USE_MPI_HEADERS
-                               "Enable wrapping MPI functions w/o enabling MPI dependency" ON)
+rocprofiler_systems_add_option(
+    ROCPROFSYS_USE_MPI_HEADERS
+    "Enable wrapping MPI functions w/o enabling MPI dependency" ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_OMPT "Enable OpenMP tools support" ON)
 rocprofiler_systems_add_option(ROCPROFSYS_USE_PYTHON "Enable Python support" OFF)
 rocprofiler_systems_add_option(ROCPROFSYS_BUILD_DYNINST "Build dyninst from submodule"

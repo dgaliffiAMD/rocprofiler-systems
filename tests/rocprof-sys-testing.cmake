@@ -438,12 +438,12 @@ function(ROCPROFILER_SYSTEMS_ADD_TEST)
     endif()
 
     if("ROCPROFSYS_USE_ROCM=ON" IN_LIST TEST_ENVIRONMENT AND NOT "rocm" IN_LIST
-                                                            TEST_ENVIRONMENT)
+                                                             TEST_ENVIRONMENT)
         list(APPEND TEST_LABELS "rocm")
     endif()
 
     if("ROCPROFSYS_USE_ROCM_SMI=ON" IN_LIST TEST_ENVIRONMENT AND NOT "rocm-smi" IN_LIST
-                                                            TEST_ENVIRONMENT)
+                                                                 TEST_ENVIRONMENT)
         list(APPEND TEST_LABELS "rocm-smi")
     endif()
 

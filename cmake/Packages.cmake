@@ -189,7 +189,8 @@ if(ROCPROFSYS_USE_ROCM)
     target_link_libraries(rocprofiler-systems-rocm INTERFACE hip::host)
 
     find_package(rocprofiler-sdk ${rocprofiler_systems_FIND_QUIETLY} REQUIRED)
-    target_link_libraries(rocprofiler-systems-rocm INTERFACE rocprofiler-sdk::rocprofiler-sdk)
+    target_link_libraries(rocprofiler-systems-rocm
+                          INTERFACE rocprofiler-sdk::rocprofiler-sdk)
 
     find_package(rocm-smi ${rocprofiler_systems_FIND_QUIETLY} REQUIRED)
     target_link_libraries(rocprofiler-systems-rocm INTERFACE rocm-smi::rocm-smi)

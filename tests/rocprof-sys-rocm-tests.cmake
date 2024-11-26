@@ -36,9 +36,7 @@ rocprofiler_systems_add_test(
     GPU ON
     NUM_PROCS 1
     RUN_ARGS 1 2 2
-    ENVIRONMENT
-        "${_base_environment}"
-    )
+    ENVIRONMENT "${_base_environment}")
 
 rocprofiler_systems_add_test(
     SKIP_BASELINE SKIP_RUNTIME
@@ -77,8 +75,7 @@ if(ROCPROFSYS_USE_ROCM)
         ENVIRONMENT
             "${_base_environment};ROCPROFSYS_ROCM_EVENTS=${ROCPROFSYS_ROCM_EVENTS_TEST}"
         REWRITE_RUN_PASS_REGEX "${_ROCP_PASS_REGEX}"
-        SAMPLING_PASS_REGEX "${_ROCP_PASS_REGEX}"
-        )
+        SAMPLING_PASS_REGEX "${_ROCP_PASS_REGEX}")
 
     rocprofiler_systems_add_test(
         SKIP_BASELINE SKIP_RUNTIME
