@@ -36,10 +36,6 @@
 #include "library/rocprofiler-sdk/fwd.hpp"
 #include "library/thread_info.hpp"
 #include "library/tracing.hpp"
-#include "timemory/components/timing/wall_clock.hpp"
-#include "timemory/hash/types.hpp"
-#include "timemory/unwind/processed_entry.hpp"
-#include "timemory/variadic/lightweight_tuple.hpp"
 
 #include <rocprofiler-sdk/agent.h>
 #include <rocprofiler-sdk/callback_tracing.h>
@@ -51,6 +47,10 @@
 #include <rocprofiler-sdk/registration.h>
 #include <rocprofiler-sdk/rocprofiler.h>
 
+#include <timemory/components/timing/wall_clock.hpp>
+#include <timemory/hash/types.hpp>
+#include <timemory/unwind/processed_entry.hpp>
+#include <timemory/variadic/lightweight_tuple.hpp>
 #include <timemory/defines.h>
 #include <timemory/process/threading.hpp>
 #include <timemory/utility/demangle.hpp>
