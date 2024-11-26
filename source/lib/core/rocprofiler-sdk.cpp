@@ -80,12 +80,12 @@ get_setting_name(std::string _v)
             auto _ret = _config->insert<TYPE, TYPE>(                                     \
                 ENV_NAME, get_setting_name(ENV_NAME), DESCRIPTION,                       \
                 TYPE{ INITIAL_VALUE },                                                   \
-                std::set<std::string>{ "custom", "rocprofsys", "librocprof-sys",        \
+                std::set<std::string>{ "custom", "rocprofsys", "librocprof-sys",         \
                                        __VA_ARGS__ });                                   \
             if(!_ret.second)                                                             \
             {                                                                            \
                 ROCPROFSYS_PRINT("Warning! Duplicate setting: %s / %s\n",                \
-                                get_setting_name(ENV_NAME).c_str(), ENV_NAME);           \
+                                 get_setting_name(ENV_NAME).c_str(), ENV_NAME);          \
             }                                                                            \
             return _config->find(ENV_NAME)->second;                                      \
         }()
@@ -143,8 +143,8 @@ get_operations_impl(rocprofiler_callback_tracing_kind_t kindv,
             auto _re = std::regex{ itr, std::regex_constants::icase };
             if(iitr.second && std::regex_search(iitr.second->data(), _re))
             {
-                ROCPROFSYS_PRINT_F("%s ('%s') matched: %s\n", optname.c_str(), itr.c_str(),
-                                  iitr.second->data());
+                ROCPROFSYS_PRINT_F("%s ('%s') matched: %s\n", optname.c_str(),
+                                   itr.c_str(), iitr.second->data());
                 _ret.emplace(iitr.first);
             }
         }
@@ -184,8 +184,8 @@ get_operations_impl(rocprofiler_buffer_tracing_kind_t kindv,
             auto _re = std::regex{ itr, std::regex_constants::icase };
             if(iitr.second && std::regex_search(iitr.second->data(), _re))
             {
-                ROCPROFSYS_PRINT_F("%s ('%s') matched: %s\n", optname.c_str(), itr.c_str(),
-                                  iitr.second->data());
+                ROCPROFSYS_PRINT_F("%s ('%s') matched: %s\n", optname.c_str(),
+                                   itr.c_str(), iitr.second->data());
                 _ret.emplace(iitr.first);
             }
         }
@@ -319,9 +319,9 @@ config_settings(const std::shared_ptr<settings>& _config)
              join::join(join::array_config{ ", ", "", "" }, _domain_choices));
 
     ROCPROFSYS_CONFIG_SETTING(std::string, "ROCPROFSYS_ROCM_DOMAINS", _domain_description,
-                             std::string{ "hip_runtime_api,marker_api,kernel_dispatch,"
-                                          "memory_copy,scratch_memory,page_migration" },
-                             "rocm", "rocprofiler-sdk")
+                              std::string{ "hip_runtime_api,marker_api,kernel_dispatch,"
+                                           "memory_copy,scratch_memory,page_migration" },
+                              "rocm", "rocprofiler-sdk")
         ->set_choices(_domain_choices);
 
     ROCPROFSYS_CONFIG_SETTING(
@@ -380,7 +380,7 @@ get_callback_domains()
         if(invalid_domain(itr))
         {
             ROCPROFSYS_THROW("unsupported ROCPROFSYS_ROCM_DOMAINS value: %s\n",
-                            itr.c_str());
+                             itr.c_str());
         }
 
         if(itr == "hsa_api")
@@ -448,7 +448,7 @@ get_buffered_domains()
         if(invalid_domain(itr))
         {
             ROCPROFSYS_THROW("unsupported ROCPROFSYS_ROCM_DOMAINS value: %s\n",
-                            itr.c_str());
+                             itr.c_str());
         }
 
         if(itr == "hsa_api")

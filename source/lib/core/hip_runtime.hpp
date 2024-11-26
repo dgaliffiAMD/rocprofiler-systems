@@ -47,6 +47,5 @@
 // must be included after hip_runtime_api.h
 #    include <hip/amd_detail/hip_prof_str.h>
 
-
 #    include <hip/hip_version.h>
 #endif

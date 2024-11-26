@@ -80,7 +80,6 @@ using settings = tim::settings;
 
 namespace
 {
-
 int  verbose_value  = tim::get_env<int>("ROCPROFSYS_VERBOSE", 0, false);
 bool debug_value    = tim::get_env<bool>("ROCPROFSYS_DEBUG", false, false);
 bool is_ci_value    = tim::get_env<bool>("ROCPROFSYS_CI", false, false);
@@ -239,8 +238,7 @@ configure_settings(bool _init)
                                ROCPROFSYS_COMPILER_VERSION);
 
 #if ROCPROFSYS_ROCM_VERSION > 0
-    tim::manager::add_metadata("ROCPROFSYS_ROCM_VERSION",
-                               ROCPROFSYS_ROCM_VERSION_STRING);
+    tim::manager::add_metadata("ROCPROFSYS_ROCM_VERSION", ROCPROFSYS_ROCM_VERSION_STRING);
     tim::manager::add_metadata("ROCPROFSYS_ROCM_VERSION_MAJOR",
                                ROCPROFSYS_ROCM_VERSION_MAJOR);
     tim::manager::add_metadata("ROCPROFSYS_ROCM_VERSION_MINOR",

@@ -233,19 +233,20 @@ as_client_data(void* _ptr)
 #if !defined(ROCPROFILER_CALL)
 #    define ROCPROFILER_CALL(result)                                                     \
         {                                                                                \
-            rocprofiler_status_t ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__) = (result); \
-            if(ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__) !=                            \
+            rocprofiler_status_t ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__) =          \
+                (result);                                                                \
+            if(ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__) !=                           \
                ROCPROFILER_STATUS_SUCCESS)                                               \
             {                                                                            \
                 auto        msg        = std::stringstream{};                            \
                 std::string status_msg = rocprofiler_get_status_string(                  \
-                    ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__));                        \
+                    ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__));                       \
                 msg << "[" #result "][" << __FILE__ << ":" << __LINE__ << "] "           \
                     << "rocprofiler-sdk call [" << #result                               \
                     << "] failed with error code "                                       \
-                    << ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__)                       \
+                    << ROCPROFSYS_VARIABLE(_rocp_status_, __LINE__)                      \
                     << " :: " << status_msg;                                             \
-                ROCPROFSYS_WARNING(0, "%s\n", msg.str().c_str());                         \
+                ROCPROFSYS_WARNING(0, "%s\n", msg.str().c_str());                        \
             }                                                                            \
         }
 #endif

@@ -55,5 +55,5 @@ rocm_events()
 {
     return rocprofiler_sdk::get_rocm_events_info();
 }
-} // namespace rocm
-} // namespace rocprofsys
+}  // namespace rocm
+}  // namespace rocprofsys

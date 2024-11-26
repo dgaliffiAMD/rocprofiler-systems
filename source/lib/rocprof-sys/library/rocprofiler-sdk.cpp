@@ -48,13 +48,13 @@
 #include <rocprofiler-sdk/rocprofiler.h>
 
 #include <timemory/components/timing/wall_clock.hpp>
-#include <timemory/hash/types.hpp>
-#include <timemory/unwind/processed_entry.hpp>
-#include <timemory/variadic/lightweight_tuple.hpp>
 #include <timemory/defines.h>
+#include <timemory/hash/types.hpp>
 #include <timemory/process/threading.hpp>
+#include <timemory/unwind/processed_entry.hpp>
 #include <timemory/utility/demangle.hpp>
 #include <timemory/utility/types.hpp>
+#include <timemory/variadic/lightweight_tuple.hpp>
 
 #include <atomic>
 #include <cctype>
@@ -122,16 +122,16 @@ create_agent_profile(rocprofiler_agent_id_t          agent_id,
             auto dev_id_s = itr.substr(pos + device_qualifier.length());
 
             ROCPROFSYS_CONDITIONAL_ABORT(dev_id_s.empty() ||
-                                            dev_id_s.find_first_not_of("0123456789") !=
-                                                std::string::npos,
-                                        "invalid device qualifier format (':device=N) "
-                                        "where N is the GPU id: %s\n",
-                                        itr.c_str());
+                                             dev_id_s.find_first_not_of("0123456789") !=
+                                                 std::string::npos,
+                                         "invalid device qualifier format (':device=N) "
+                                         "where N is the GPU id: %s\n",
+                                         itr.c_str());
 
             auto dev_id_v = std::stoul(dev_id_s);
 
             ROCPROFSYS_PRINT_F("tool agent device id=%lu, name=%s, device_id=%lu\n",
-                              tool_agent_v->device_id, name_v.c_str(), dev_id_v);
+                               tool_agent_v->device_id, name_v.c_str(), dev_id_v);
             // skip this counter if the counter is for a specific device id (which
             // doesn't this agent's device id)
             if(dev_id_v != tool_agent_v->device_id)
@@ -146,8 +146,8 @@ create_agent_profile(rocprofiler_agent_id_t          agent_id,
             std::regex_replace(name_v, std::regex{ "^(.*)(\\[)([0-9]+)(\\])$" }, "$1");
         if(name_v != _old_name_v)
             ROCPROFSYS_PRINT_F("tool agent device id=%lu, old_name=%s, name=%s\n",
-                              tool_agent_v->device_id, _old_name_v.c_str(),
-                              name_v.c_str());
+                               tool_agent_v->device_id, _old_name_v.c_str(),
+                               name_v.c_str());
 
         // search the gpu agent counter info for a counter with a matching name
         for(const auto& citr : data->agent_counter_info.at(agent_id))
@@ -506,7 +506,7 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
             case ROCPROFILER_CALLBACK_TRACING_MEMORY_COPY:
             {
                 ROCPROFSYS_CI_ABORT(true, "unhandled callback record kind: %i\n",
-                                   record.kind);
+                                    record.kind);
                 break;
             }
         }
@@ -574,7 +574,7 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
             case ROCPROFILER_CALLBACK_TRACING_MEMORY_COPY:
             {
                 ROCPROFSYS_CI_ABORT(true, "unhandled callback record kind: %i\n",
-                                   record.kind);
+                                    record.kind);
                 break;
             }
         }
@@ -781,8 +781,8 @@ tool_tracing_buffered(rocprofiler_context_id_t /*context*/,
         else
         {
             ROCPROFSYS_THROW("unexpected rocprofiler_record_header_t tracing category "
-                            "kind. category: %i, kind: %i\n",
-                            header->category, header->kind);
+                             "kind. category: %i, kind: %i\n",
+                             header->category, header->kind);
         }
     }
 }

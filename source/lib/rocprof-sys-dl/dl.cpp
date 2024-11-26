@@ -461,7 +461,7 @@ public:
 #if ROCPROFSYS_USE_ROCM > 0
     rocprofiler_tool_configure_result_t* (*rocprofiler_configure_f)(
         uint32_t, const char*, uint32_t, rocprofiler_client_id_t*) = nullptr;
- #endif
+#endif
 
     // OpenMP functions
 #if defined(ROCPROFSYS_USE_OMPT) && ROCPROFSYS_USE_OMPT > 0
@@ -1071,7 +1071,7 @@ extern "C"
         rocprofiler_client_id_t* client_id)
     {
         return ROCPROFSYS_DL_INVOKE(get_indirect().rocprofiler_configure_f, version,
-                                   runtime_version, priority, client_id);
+                                    runtime_version, priority, client_id);
     }
 #endif
 
@@ -1400,9 +1400,12 @@ extern "C"
 
         if(::rocprofsys::dl::init_real)
         {
-            // throw std::runtime_error("[rocprof-sys][dl] Unsuccessful wrapping of main: "
+            // throw std::runtime_error("[rocprof-sys][dl] Unsuccessful wrapping of main:
+            // "
             //                          "nullptr to real init function");
-            ROCPROFSYS_DL_LOG(0, "%s\n", "Unsuccessful wrapping of init: nullptr to real init function");
+            ROCPROFSYS_DL_LOG(
+                0, "%s\n",
+                "Unsuccessful wrapping of init: nullptr to real init function");
 
             if(envp)
             {
@@ -1411,7 +1414,7 @@ extern "C"
                 {
                     auto _env_v = std::string_view{ envp[_idx++] };
                     if(_env_v.find("ROCPROFSYS") != 0 &&
-                    _env_v.find("librocprof-sys") == std::string_view::npos)
+                       _env_v.find("librocprof-sys") == std::string_view::npos)
                         continue;
                     auto _pos = _env_v.find('=');
                     if(_pos < _env_v.length())
@@ -1419,7 +1422,7 @@ extern "C"
                         auto _var = std::string{ _env_v }.substr(0, _pos);
                         auto _val = std::string{ _env_v }.substr(_pos + 1);
                         ROCPROFSYS_DL_LOG(1, "%s(%s, %s)\n", "rocprofsys_set_env",
-                                        _var.c_str(), _val.c_str());
+                                          _var.c_str(), _val.c_str());
                         setenv(_var.c_str(), _val.c_str(), 0);
                     }
                 }

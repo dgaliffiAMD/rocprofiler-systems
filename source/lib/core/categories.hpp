@@ -153,15 +153,15 @@ using name = perfetto_category<Tp...>;
         ROCPROFSYS_PERFETTO_CATEGORY(category::user),                                    \
         ROCPROFSYS_PERFETTO_CATEGORY(category::python),                                  \
         ROCPROFSYS_PERFETTO_CATEGORY(category::sampling),                                \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm),                                     \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_hip_api),                             \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_hsa_api),                             \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_kernel_dispatch),                     \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_memory_copy),                         \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_scratch_memory),                      \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_page_migration),                      \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_counter_collection),                  \
-        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_marker_api),                          \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm),                                    \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_hip_api),                            \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_hsa_api),                            \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_kernel_dispatch),                    \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_memory_copy),                        \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_scratch_memory),                     \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_page_migration),                     \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_counter_collection),                 \
+        ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_marker_api),                         \
         ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_smi),                                \
         ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_smi_busy),                           \
         ROCPROFSYS_PERFETTO_CATEGORY(category::rocm_smi_temp),                           \

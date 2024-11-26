@@ -86,7 +86,6 @@ rocprofsys_set_main(main_func_t func) ROCPROFSYS_INTERNAL_API;
 extern int
 rocprofsys_main_init(int argc, char** argv, char** envp) ROCPROFSYS_INTERNAL_API;
 
-
 extern int
 rocprofsys_main(int argc, char** argv, char** envp) ROCPROFSYS_INTERNAL_API;
 

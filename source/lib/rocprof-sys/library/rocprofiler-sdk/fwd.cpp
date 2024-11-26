@@ -126,9 +126,9 @@ client_data::initialize()
         [](rocprofiler_agent_version_t version, const void** agents_arr,
            size_t num_agents, void* user_data) {
             ROCPROFSYS_CONDITIONAL_ABORT(version != supported_agent_info_version,
-                                        "rocprofiler agent info version != expected "
-                                        "agent info version (=%i). value: %i\n",
-                                        supported_agent_info_version, version);
+                                         "rocprofiler agent info version != expected "
+                                         "agent info version (=%i). value: %i\n",
+                                         supported_agent_info_version, version);
 
             auto _agents_v = std::vector<rocprofiler_agent_v0_t>{};
             for(size_t i = 0; i < num_agents; ++i)
