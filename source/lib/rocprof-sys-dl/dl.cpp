@@ -54,7 +54,7 @@
 #include <thread>
 #include <unistd.h>
 
-#if defined(ROCPROFSYS_USE_ROCM)
+#if defined(ROCPROFSYS_USE_ROCM) && ROCPROFSYS_USE_ROCM > 0
 #    include <rocprofiler-sdk/registration.h>
 #endif
 

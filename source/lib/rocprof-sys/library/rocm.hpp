@@ -42,6 +42,15 @@ using hardware_counter_info = ::tim::hardware_counters::info;
 
 std::vector<hardware_counter_info>
 rocm_events();
+
+#if !defined(ROCPROFSYS_USE_ROCM) || ROCPROFSYS_USE_ROCM == 0
+inline std::vector<hardware_counter_info>
+rocm_events()
+{
+    return std::vector<hardware_counter_info>();
+}
+#endif
+
 }  // namespace rocm
 }  // namespace rocprofsys
 
