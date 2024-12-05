@@ -27,7 +27,6 @@ env:
 
 jobs:
   installers:
-    if: github.repository == 'ROCm/rocprofiler-systems'
     runs-on: ubuntu-20.04
     strategy:
       fail-fast: false

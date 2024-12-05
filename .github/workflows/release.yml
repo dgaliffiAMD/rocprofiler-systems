@@ -16,7 +16,6 @@ env:
 
 jobs:
   release:
-    if: github.repository == 'ROCm/rocprofiler-systems'
     runs-on: ubuntu-20.04
     permissions:
       contents: write
@@ -29,6 +28,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y cmake
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo "Triggered by tag: ${GITHUB_REF#refs/tags/}"
+          fi
           cmake -D OUTPUT_DIR=${PWD} -P scripts/write-rocprof-sys-install.cmake
       - name: Generate Release
         uses: softprops/action-gh-release@v1
