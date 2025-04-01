@@ -508,13 +508,28 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
                                             user_data, ts);
                 break;
             }
-#if(ROCPROFILER_VERSION >= 700)
+            case ROCPROFILER_CALLBACK_TRACING_RCCL_API:
+            {
+                tool_tracing_callback_start(category::rocm_rccl_api{}, record,
+                    user_data, ts);
+                break;
+            }
+#if ROCPROFILER_VERSION >= 600
+            case ROCPROFILER_CALLBACK_TRACING_OMPT:
+            {
+                printf("OPMT callback - start (op: %d) \n", (int) record.operation);
+                tool_tracing_callback_start(category::rocm_ompt_api{}, record,
+                    user_data, ts);
+                break;
+            }
             case ROCPROFILER_CALLBACK_TRACING_ROCDECODE_API:
             {
                 tool_tracing_callback_start(category::rocm_rocdecode_api{}, record,
                                             user_data, ts);
                 break;
             }
+#endif
+#if ROCPROFILER_VERSION >= 700
             case ROCPROFILER_CALLBACK_TRACING_ROCJPEG_API:
             {
                 tool_tracing_callback_start(category::rocm_rocjpeg_api{}, record,
@@ -530,7 +545,6 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
             case ROCPROFILER_CALLBACK_TRACING_SCRATCH_MEMORY:
             case ROCPROFILER_CALLBACK_TRACING_KERNEL_DISPATCH:
             case ROCPROFILER_CALLBACK_TRACING_MEMORY_COPY:
-            case ROCPROFILER_CALLBACK_TRACING_RCCL_API:
             {
                 ROCPROFSYS_CI_ABORT(true, "unhandled callback record kind: %i\n",
                                     record.kind);
@@ -592,13 +606,27 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
                                            ts, _bt_data);
                 break;
             }
-#if(ROCPROFILER_VERSION >= 700)
+            case ROCPROFILER_CALLBACK_TRACING_RCCL_API:
+            {
+                tool_tracing_callback_stop(category::rocm_rccl_api{}, record,
+                    user_data, ts, _bt_data);
+                break;
+            }
+#if(ROCPROFILER_VERSION >= 600)
+            case ROCPROFILER_CALLBACK_TRACING_OMPT:
+            {
+                tool_tracing_callback_stop(category::rocm_ompt_api{}, record,
+                    user_data, ts, _bt_data);
+                break;
+            }
             case ROCPROFILER_CALLBACK_TRACING_ROCDECODE_API:
             {
                 tool_tracing_callback_stop(category::rocm_rocdecode_api{}, record,
                                            user_data, ts, _bt_data);
                 break;
             }
+#endif
+#if ROCPROFILER_VERSION >= 700
             case ROCPROFILER_CALLBACK_TRACING_ROCJPEG_API:
             {
                 tool_tracing_callback_stop(category::rocm_rocjpeg_api{}, record,
@@ -614,7 +642,6 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
             case ROCPROFILER_CALLBACK_TRACING_SCRATCH_MEMORY:
             case ROCPROFILER_CALLBACK_TRACING_KERNEL_DISPATCH:
             case ROCPROFILER_CALLBACK_TRACING_MEMORY_COPY:
-            case ROCPROFILER_CALLBACK_TRACING_RCCL_API:
             {
                 ROCPROFSYS_CI_ABORT(true, "unhandled callback record kind: %i\n",
                                     record.kind);
@@ -1037,15 +1064,23 @@ tool_init(rocprofiler_client_finalize_t fini_func, void* user_data)
                 ROCPROFILER_CALLBACK_TRACING_HSA_FINALIZE_EXT_API,
                 ROCPROFILER_CALLBACK_TRACING_HIP_RUNTIME_API,
                 ROCPROFILER_CALLBACK_TRACING_HIP_COMPILER_API,
-#if(ROCPROFILER_VERSION >= 700)
+                ROCPROFILER_CALLBACK_TRACING_RCCL_API,
+                ROCPROFILER_CALLBACK_TRACING_MARKER_CORE_API,
+#if(ROCPROFILER_VERSION >= 600)
+                ROCPROFILER_CALLBACK_TRACING_OMPT,
                 ROCPROFILER_CALLBACK_TRACING_ROCDECODE_API,
+#endif
+#if(ROCPROFILER_VERSION >= 700)
                 ROCPROFILER_CALLBACK_TRACING_ROCJPEG_API,
 #endif
-                ROCPROFILER_CALLBACK_TRACING_MARKER_CORE_API
         })
     {
         if(_callback_domains.count(itr) > 0)
         {
+            printf(
+                "configuring callback tracing service for domain: (%i)\n",
+                static_cast<int>(itr));
+
             auto _ops = rocprofiler_sdk::get_operations(itr);
             _data->backtrace_operations.emplace(
                 itr, rocprofiler_sdk::get_backtrace_operations(itr));
