@@ -481,9 +481,21 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
     auto ts = rocprofiler_timestamp_t{};
     ROCPROFILER_CALL(rocprofiler_get_timestamp(&ts));
 
+    const char* name = nullptr;
+    rocprofiler_query_callback_tracing_kind_operation_name(
+        record.kind, record.operation, &name, nullptr);
+
+    auto info = std::stringstream{};
+    info << std::left << "tid=" << record.thread_id << ", cid=" << std::setw(3)
+         << record.correlation_id.internal << ", kind=" << std::setw(2) << record.kind
+         << ", operation=" << std::setw(3) << record.operation << ", phase=" << record.phase
+         << ", dt_nsec=" << std::setw(8) << ts << ", name=" << name;
+
     if(record.phase == ROCPROFILER_CALLBACK_PHASE_ENTER)
     {
         user_data->value = ts;
+        std::cout << "callback enter: " << record.kind << " " << record.operation
+                  << std::endl;
         switch(record.kind)
         {
             case ROCPROFILER_CALLBACK_TRACING_HSA_CORE_API:
@@ -1035,9 +1047,10 @@ flush()
 int
 tool_init(rocprofiler_client_finalize_t fini_func, void* user_data)
 {
+    const auto callback_tracing_info = rocprofiler::sdk::get_callback_tracing_names();
     auto domains = settings::instance()->at("ROCPROFSYS_ROCM_DOMAINS");
 
-    ROCPROFSYS_VERBOSE_F(1, "rocprof-sys ROCm Domains:\n");
+    ROCPROFSYS_VERBOSE_F(1, "Available ROCm Domains:\n");
     for(const auto& itr : domains->get_choices())
         ROCPROFSYS_VERBOSE_F(1, "- %s\n", itr.c_str());
 
@@ -1077,9 +1090,8 @@ tool_init(rocprofiler_client_finalize_t fini_func, void* user_data)
     {
         if(_callback_domains.count(itr) > 0)
         {
-            printf(
-                "configuring callback tracing service for domain: (%i)\n",
-                static_cast<int>(itr));
+            std::cout << "configuring callback tracing service for domain: "
+                      << callback_tracing_info[itr].name << " (" << itr << ")." << std::endl;
 
             auto _ops = rocprofiler_sdk::get_operations(itr);
             _data->backtrace_operations.emplace(
