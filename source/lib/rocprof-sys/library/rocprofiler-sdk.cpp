@@ -492,11 +492,12 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
          << ", dt_nsec=" << std::setw(8) << ts << ", name=" << name;
 
     if (record.kind == ROCPROFILER_CALLBACK_TRACING_OMPT) {
-        std::cout << "[DFG] " << info.str() << std::endl;
+        std::cerr << "[DFG] " << info.str() << std::endl;
     }
 
     if (rocprofsys::get_state() != rocprofsys::State::Active) {
-        ROCPROFSYS_WARNING_F(0, "Callback called when tool is not active..\n");
+        ROCPROFSYS_WARNING_F(0, "Callback called when tool is not active.\n\t%s\n",
+            info.str().c_str());
         return;
     }
 
@@ -683,11 +684,97 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
                 _data->dispatch_info.dispatch_id,
                 timing_interval{ _data->start_timestamp, _data->end_timestamp });
         }
-        else {
+        else if (record.kind == ROCPROFILER_CALLBACK_TRACING_OMPT)
+        {
+            using backtrace_entry_vec_t = std::vector<tim::unwind::processed_entry>;
+
+            constexpr size_t bt_stack_depth       = 16;
+            constexpr size_t bt_ignore_depth      = 3;
+            constexpr bool   bt_with_signal_frame = true;
+
+            auto _bt_data = std::optional<backtrace_entry_vec_t>{};
+
+            if(config::get_use_perfetto() && config::get_perfetto_annotations() &&
+               tool_data->backtrace_operations.at(record.kind).count(record.operation) > 0)
+            {
+                auto _backtrace = tim::get_unw_stack<bt_stack_depth, bt_ignore_depth,
+                                                     bt_with_signal_frame>();
+                _bt_data        = backtrace_entry_vec_t{};
+                _bt_data->reserve(_backtrace.size());
+                for(auto itr : _backtrace)
+                {
+                    if(itr)
+                    {
+                        auto _val = binary::lookup_ipaddr_entry<false>(itr->address());
+                        if(_val)
+                        {
+                            _bt_data->emplace_back(std::move(*_val));
+                        }
+                    }
+                }
+            }
+
+            // set the parallel_data value
+            auto* _data =
+                static_cast<rocprofiler_callback_tracing_ompt_data_t*>(record.payload);
+
+            if (record.operation == ROCPROFILER_OMPT_ID_parallel_begin)
+            {
+                auto& args = _data->args.parallel_begin;
+                args.parallel_data->value =
+                    record.correlation_id.internal;
+
+                user_data->value = ts;
+                tool_tracing_callback_start(category::rocm_ompt_api{}, record,
+                        user_data, ts);
+                tool_tracing_callback_stop(category::rocm_ompt_api{}, record,
+                        user_data, ts, _bt_data);
+            }
+            else if(record.operation == ROCPROFILER_OMPT_ID_parallel_end)
+            {
+                // set the parallel_data value
+                // auto& args = _data->args.parallel_end;
+                // args.parallel_data->value = 0;
+                user_data->value = ts;
+                tool_tracing_callback_start(category::rocm_ompt_api{}, record,
+                    user_data, ts);
+                tool_tracing_callback_stop(category::rocm_ompt_api{}, record,
+                    user_data, ts, _bt_data);
+            }
+            else if (record.operation == ROCPROFILER_OMPT_ID_thread_begin)
+            {
+                // set the thread_data value
+                auto& args              = _data->args.thread_begin;
+                args.thread_data->value = record.thread_id;
+
+                user_data->value = ts;
+                tool_tracing_callback_start(category::rocm_ompt_api{}, record,
+                        user_data, ts);
+                tool_tracing_callback_stop(category::rocm_ompt_api{}, record,
+                        user_data, ts, _bt_data);
+            }
+            else if (record.operation == ROCPROFILER_OMPT_ID_thread_end)
+            {
+                // set the thread_data value
+                // auto& args              = _data->args.thread_end;
+                // args.thread_data->value = 0;
+                user_data->value = ts;
+                tool_tracing_callback_start(category::rocm_ompt_api{}, record,
+                    user_data, ts);
+                tool_tracing_callback_stop(category::rocm_ompt_api{}, record,
+                    user_data, ts, _bt_data);
+            }
+            else {
+                ROCPROFSYS_WARNING_F(1,
+                    "tool_tracing_callback: unhandled ompt callback record\n\t%s\n",
+                    info.str().c_str());
+            }
+        }
+        else
+        {
             ROCPROFSYS_WARNING_F(1,
-                                "tool_tracing_callback: unhandled callback record in NONE phase -"
-                                "phase: %i, kind: %i, operation: %i\n",
-                                record.phase, record.kind, record.operation);
+                                "tool_tracing_callback: unhandled callback record\n\t%s\n",
+                                info.str().c_str());
             // ROCPROFSYS_CI_ABORT(true, "unhandled callback record phase: %i\n",
             //                     record.phase);
         }
