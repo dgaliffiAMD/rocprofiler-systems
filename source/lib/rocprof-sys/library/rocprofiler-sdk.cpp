@@ -491,11 +491,20 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
          << ", operation=" << std::setw(3) << record.operation << ", phase=" << record.phase
          << ", dt_nsec=" << std::setw(8) << ts << ", name=" << name;
 
+    if (record.kind == ROCPROFILER_CALLBACK_TRACING_OMPT) {
+        std::cout << "[DFG] " << info.str() << std::endl;
+    }
+
+    if (rocprofsys::get_state() != rocprofsys::State::Active) {
+        ROCPROFSYS_WARNING_F(0, "Callback called when tool is not active..\n");
+        return;
+    }
+
     if(record.phase == ROCPROFILER_CALLBACK_PHASE_ENTER)
     {
         user_data->value = ts;
-        std::cout << "callback enter: " << record.kind << " " << record.operation
-                  << std::endl;
+        // std::cout << "callback enter: " << record.kind << " " << record.operation
+        //           << std::endl;
         switch(record.kind)
         {
             case ROCPROFILER_CALLBACK_TRACING_HSA_CORE_API:
@@ -529,7 +538,6 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
 #if ROCPROFILER_VERSION >= 600
             case ROCPROFILER_CALLBACK_TRACING_OMPT:
             {
-                printf("OPMT callback - start (op: %d) \n", (int) record.operation);
                 tool_tracing_callback_start(category::rocm_ompt_api{}, record,
                     user_data, ts);
                 break;
@@ -675,10 +683,22 @@ tool_tracing_callback(rocprofiler_callback_tracing_record_t record,
                 _data->dispatch_info.dispatch_id,
                 timing_interval{ _data->start_timestamp, _data->end_timestamp });
         }
+        else {
+            ROCPROFSYS_WARNING_F(1,
+                                "tool_tracing_callback: unhandled callback record in NONE phase -"
+                                "phase: %i, kind: %i, operation: %i\n",
+                                record.phase, record.kind, record.operation);
+            // ROCPROFSYS_CI_ABORT(true, "unhandled callback record phase: %i\n",
+            //                     record.phase);
+        }
     }
     else
     {
-        ROCPROFSYS_CI_ABORT(true, "unhandled callback record phase: %i\n", record.phase);
+        // ROCPROFSYS_CI_ABORT(true, "unhandled callback record phase: %i\n", record.phase);
+        ROCPROFSYS_WARNING_F(1,
+            "tool_tracing_callback: unhandled callback record phase - "
+            "phase: %i, kind: %i, operation: %i\n",
+            record.phase, record.kind, record.operation);
     }
 }
 
