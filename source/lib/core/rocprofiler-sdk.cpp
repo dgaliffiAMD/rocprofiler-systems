@@ -397,8 +397,6 @@ get_callback_domains()
         supported.emplace(ROCPROFILER_CALLBACK_TRACING_ROCDECODE_API);
     }
 #endif
-
-
 #if ROCPROFILER_VERSION >= 700
     if(_version.formatted >= 700)
     {

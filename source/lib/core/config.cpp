@@ -1900,17 +1900,6 @@ get_use_vaapi_tracing()
 }
 
 bool
-get_use_ompt()
-{
-#if defined(TIMEMORY_USE_OMPT)
-    static auto _v = get_config()->find("ROCPROFSYS_USE_OMPT");
-    return static_cast<tim::tsettings<bool>&>(*_v->second).get();
-#else
-    return false;
-#endif
-}
-
-bool
 get_use_code_coverage()
 {
     static auto _v = get_config()->find("ROCPROFSYS_USE_CODE_COVERAGE");
