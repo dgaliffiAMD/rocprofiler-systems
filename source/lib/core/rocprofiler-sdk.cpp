@@ -410,6 +410,17 @@ get_callback_domains()
                          .value_or(std::string{}),
                      " ,;:\t\n");
 
+    // Translate some configuration settings to rocprofiler domains
+    if(config::get_use_ompt() && _version.formatted >= 600)
+    {
+        _data.emplace(ROCPROFILER_CALLBACK_TRACING_OMPT);
+    }
+    if(config::get_use_rcclp() && _version.formatted >= 600)
+    {
+        _data.emplace(ROCPROFILER_CALLBACK_TRACING_RCCL_API);
+    }
+
+    // Check that the domains are valid
     const auto valid_choices =
         settings::instance()->at("ROCPROFSYS_ROCM_DOMAINS")->get_choices();
 

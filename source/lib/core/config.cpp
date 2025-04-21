@@ -1913,6 +1913,13 @@ get_use_rcclp()
     return static_cast<tim::tsettings<bool>&>(*_v->second).get();
 }
 
+bool
+get_use_ompt()
+{
+    static auto _v = get_config()->find("ROCPROFSYS_USE_OMPT");
+    return static_cast<tim::tsettings<bool>&>(*_v->second).get();
+}
+
 size_t
 get_num_threads_hint()
 {

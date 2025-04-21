@@ -238,6 +238,9 @@ bool
 get_sampling_keep_internal();
 
 bool
+get_use_ompt();
+
+bool
 get_use_rcclp();
 
 size_t

@@ -67,7 +67,7 @@ rocprofiler_systems_add_test(
     GPU ON
     LABELS "openmp;openmp-target"
     ENVIRONMENT
-        "${_ompt_environment};ROCPROFSYS_ROCM_DOMAINS=hip_runtime_api,kernel_dispatch,ompt")
+        "${_ompt_environment}")
 
 rocprofiler_systems_add_validation_test(
     NAME openmp-target-sampling
